@@ -17,6 +17,7 @@ Probabilidad de obtener 3 coronas: 0.125
 
 import random
 
+#Funcion para simular el lanzamiento de 3 monedas y contar coronas
 def sim_3_monedas(trials=200_000):
     #Contamos de 0 a 3 coronas posibles
     counts = [0, 0, 0, 0]

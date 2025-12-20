@@ -9,6 +9,7 @@ Sugerencia: La probabilidad es: 1/221 ~ 0.0045
 
 import random
 
+#Funcion para calcular la probabilidad por simulacion de obtener dos ases al sacar 2 cartas
 def prob_dos_ases(trials=300_000):
     ##Simula el sorteo de 2 cartas sin reemplazo de una baraja con 4 ases y 48 no-ases.
     deck = ["A"] * 4 + ["X"] * 48 #A = as, X = no-as
