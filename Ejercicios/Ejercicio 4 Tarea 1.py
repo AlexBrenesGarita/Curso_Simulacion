@@ -24,4 +24,5 @@ def prob_dos_ases(trials=300_000):
 
     return hits / trials
 
+#Imprime la probabilidad simulada de obtener dos ases
 print(prob_dos_ases())

@@ -27,4 +27,5 @@ def sim_objetivo_200(trials=100_000, x=10):
             hits += 1
     return hits / trials
 
+#Imprime la probabilidad simulada de alcanzar los 200 dolares con la estrategia (x,x)
 print(sim_objetivo_200())

@@ -26,5 +26,6 @@ def prob_par_de_ases_sim(trials=300_000):
 
     return hits / trials
 
-print("Clásica:", prob_par_de_ases_clasica())
+#Imprime la probabilidad clasica y simulada de obtener un par de ases
+print("Clasica:", prob_par_de_ases_clasica())
 print("Simulada:", prob_par_de_ases_sim())

@@ -33,6 +33,7 @@ def sim_3_monedas(trials=200_000):
     probs = [c / trials for c in counts]
     return probs  #[P(0), P(1), P(2), P(3)]
 
+#Cada valor corresponde a la probabilidad de obtener 0, 1, 2 o 3 coronas
 p0, p1, p2, p3 = sim_3_monedas()
 print("P(0) =", p0)
 print("P(1) =", p1)
