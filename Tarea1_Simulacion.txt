@@ -1,0 +1,408 @@
+SIMULACION — Tarea 1 
+========================================
+
+
+EJERCICIO 2 
+---------------------------------------
+
+#Ejercicio 2
+'''
+Se tienen 3 monedas. Las cuales pueden dar como resultado escudo o corona.
+a. Utilizando probabilidad matemática calcule el valor de obtener dos coronas.
+b. Con un programa de simulación, calcule la probabilidad de obtener 0 coronas.
+c. Con un programa de simulación, calcule la probabilidad de obtener 1 coronas.
+d. Con un programa de simulación, calcule la probabilidad de obtener 2 coronas.
+e. Con un programa de simulación, calcule la probabilidad de obtener 3 coronas.
+f. Qué clase de distribución de probabilidad es esta?
+
+Sugerencia:
+Probabilidad de obtener 0 coronas: 0.125
+Probabilidad de obtener 1 corona:  0.375
+Probabilidad de obtener 2 coronas: 0.375
+Probabilidad de obtener 3 coronas: 0.125
+'''
+
+import random
+
+#Funcion para simular el lanzamiento de 3 monedas y contar coronas
+def sim_3_monedas(trials=200_000):
+    #Contamos de 0 a 3 coronas posibles
+    counts = [0, 0, 0, 0]
+
+    for _ in range(trials):
+        coronas = 0
+        for _ in range(3):
+            #Simulamos el lanzamiento de una moneda
+            if random.random() <= 0.5:
+                coronas += 1
+        counts[coronas] += 1
+
+    probs = [c / trials for c in counts]
+    return probs  #[P(0), P(1), P(2), P(3)]
+
+#Cada valor corresponde a la probabilidad de obtener 0, 1, 2 o 3 coronas
+p0, p1, p2, p3 = sim_3_monedas()
+print("P(0) =", p0)
+print("P(1) =", p1)
+print("P(2) =", p2)
+print("P(3) =", p3)
+
+
+
+
+EJERCICIO 3 
+-----------------------------------------------------------------------------------
+
+#() Ejercicio 3.
+#Utilizando el lenguaje de simulación, construya una distribución binomial con un máximo de 3 éxitos y 
+#una probabilidad de obtener un éxito de 0.50. Grafique un histograma con los resultados obtenidos.
+#Sugerencia: Busque las instrucciones BINOMIALPROB e HISTOGRAM.
+
+#Vamos a usar matplotlib para la construccion del histograma y random para el manejo de aciertos y fallos
+import matplotlib.pyplot as plt
+import random as r
+
+# Función binomial
+def binomial(n, p, simulaciones):
+    resultados = []
+
+    for i in range(simulaciones):
+        aciertos = 0
+        for j in range(n):
+            if r.random() <= p:
+                aciertos += 1
+        resultados.append(aciertos)
+
+    return resultados
+
+# Parámetros
+n = 3
+p = 0.50
+simulaciones = 15000
+
+# Simulación
+datos = binomial(n, p, simulaciones)
+
+# Histograma
+plt.hist(datos, bins=range(0, n+2), align='left', rwidth=0.8)
+plt.xlabel("Número de éxitos")
+plt.ylabel("Frecuencia")
+plt.title("Distribución Binomial (n=3, p=0.50)")
+plt.xticks(range(0, n+1))
+plt.show()
+
+
+
+
+EJERCICIO 4 
+--------------------------------------------
+#Ejercicio 4 
+'''
+Se tiene un mazo de cartas convencional.
+a. Cuál es la probabilidad de sacar dos cartas y que ambos sean ases?
+b. Construya un programa de simulación que genere estos resultados.
+Sugerencia: La probabilidad es: 1/221 ~ 0.0045
+'''
+
+
+import random
+
+#Funcion para calcular la probabilidad por simulacion de obtener dos ases al sacar 2 cartas
+def prob_dos_ases(trials=300_000):
+    ##Simula el sorteo de 2 cartas sin reemplazo de una baraja con 4 ases y 48 no-ases.
+    deck = ["A"] * 4 + ["X"] * 48 #A = as, X = no-as
+    hits = 0
+
+    for _ in range(trials):
+        #Se sacan 2 cartas sin reemplazo
+        hand = random.sample(deck, 2) 
+        #Se verifica si ambas son ases
+        if hand.count("A") == 2:
+            hits += 1
+
+    return hits / trials
+
+#Imprime la probabilidad simulada de obtener dos ases
+print(prob_dos_ases())
+
+
+
+EJERCICIO 5 
+---------------------------------------------------------------------------------
+#() Ejercicio 5.
+
+#Se tiene un mazo de cartas convencional.
+#a. Cuál es la probabilidad que al sacar una carta se obtenga una espada o un trébol?
+#b. Construya un programa de simulación que genere estos resultados.
+#Sugerencia: La probabilidad es: 0.50
+
+#Para este caso vamos a simular una baraja de cartas convencional por medio de objetos
+import random as r
+
+class Baraja:
+    def __init__(self):
+        self.Cartas = []
+        self.tipos = ['Corazones','Espadas','Treboles','Diamantes']
+        self.armarBaraja()
+        self.barajar()
+    
+    def armarBaraja(self):
+        for tipo in self.tipos:
+            for valor in range(2,15):
+                self.Cartas.append(Carta(valor,tipo))
+    
+    def barajar(self):
+        r.shuffle(self.Cartas)
+
+    def tomarCarta(self):
+        return self.Cartas.pop(0)
+
+class Carta:
+    def __init__(self, valor, tipo):
+        self.valor = valor
+        self.tipo = tipo
+    def getValor(self):
+        return self.valor
+    def getTipo(self):
+        return self.tipo
+        
+
+def probColorNegro(cantidad):
+    aciertos=0
+    totales=0
+    for i in range(cantidad):
+        baraja = Baraja()
+        carta = baraja.tomarCarta()
+        if carta.getTipo() in ['Espadas','Treboles']:
+            aciertos+=1
+            totales+=1
+            continue
+        totales+=1
+    return aciertos / totales
+
+
+resultado = probColorNegro(10000)
+print(f'Probabilidad Calculada: {resultado}')
+            
+
+EJERCICIO 6 
+----------------------------------------------------------------------
+#Ejercicio 6
+'''
+Se tiene un mazo de cartas convencional, el cual ha sido barajdo. Se reparten 5 cartas y se desea establecer la probabilidad que dentro de esas 5 cartas se encuentre un par de ases.
+a. Resuelva el problema utilizando probabilidad clásica.
+b. Resuelva el problema construyendo un programa de simulación.
+
+'''
+
+import random
+from math import comb
+
+#Funcion para calcular la probabilidad clasica de obtener un par de ases al sacar 5 cartas
+def prob_par_de_ases_clasica():
+    return comb(4, 2) * comb(48, 3) / comb(52, 5)
+
+
+#Funcion para calcular la probabilidad por simulacion de obtener un par de ases al sacar 5 cartas
+def prob_par_de_ases_sim(trials=300_000):
+    deck = ["A"] * 4 + ["X"] * 48
+    hits = 0
+
+    for _ in range(trials):
+        hand = random.sample(deck, 5)
+        if hand.count("A") == 2:
+            hits += 1
+
+    return hits / trials
+
+#Imprime la probabilidad clasica y simulada de obtener un par de ases
+print("Clasica:", prob_par_de_ases_clasica())
+print("Simulada:", prob_par_de_ases_sim())
+
+
+EJERCICIO 7 
+-----------------------------------------------------------------------------------------
+#() Ejercicio 7. 
+#Se tiene un mazo de cartas convencional, el cual ha sido barajdo. Se reparten 5 cartas y se desea establecer la probabilidad que las 5 cartas sumen entre 17 y 21.
+#Resuelva el problema construyendo un programa de simulación.
+
+import random as r
+
+#Para este ejercicio vamos a usar los mismos objetos del ejercicio 5
+
+class Baraja:
+    def __init__(self):
+        self.Cartas = []
+        self.tipos = ['Corazones','Espadas','Treboles','Diamantes']
+        self.armarBaraja()
+        self.barajar()
+    
+    def armarBaraja(self):
+        for tipo in self.tipos:
+            for valor in range(2,15):
+                self.Cartas.append(Carta(valor,tipo))
+    
+    def barajar(self):
+        r.shuffle(self.Cartas)
+
+    def tomarCarta(self):
+        return self.Cartas.pop(0)
+
+class Carta:
+    def __init__(self, valor, tipo):
+        self.valor = valor
+        self.tipo = tipo
+    def getValor(self):
+        return self.valor
+    def getTipo(self):
+        return self.tipo
+        
+def sumarValores(arreglo):
+    if arreglo == []:
+        return 0
+    return arreglo[0] + sumarValores(arreglo[1:])
+
+def SimulacionDeMano(cantidad):
+    aciertos=0
+    for i in range(cantidad):
+        valor=0
+        baraja = Baraja()
+        cartas= []
+        #Tomar 5 cartas
+        cartas.append(baraja.tomarCarta().getValor())
+        cartas.append(baraja.tomarCarta().getValor())
+        cartas.append(baraja.tomarCarta().getValor())
+        cartas.append(baraja.tomarCarta().getValor())
+        cartas.append(baraja.tomarCarta().getValor())
+
+        valor = sumarValores(cartas)
+        while valor < 21:
+            if not 14 in cartas:
+                break
+            cartas.remove(14)
+            cartas.append(1)
+            valor = sumarValores(cartas)
+            
+        if valor >= 17 and valor <= 21:
+            aciertos+=1
+
+    return aciertos/cantidad
+
+resultado = SimulacionDeMano(100000)
+print(f'Probabilidad Calculada: {resultado}')
+
+
+
+EJERCICIO 8 
+---------------------------------------------------
+#Ejercicio 8
+'''
+Se tiene un juego con una probabilidad de ganar de 0.48 y una probabilidad de perder de 0.52. Cada vez que se apuesta una cantidad de dinero se gana lo que se apuesta o se pierde todo. Se inicia el juego con $100 dólares y se desea llegar a obtener $200.
+a. Si se utiliza una estrategia de apuesta (x,x) con x=10. Es decir, si gano apuesto "x" y si pierdo apuesto "x", determine la probabilidad de obtener la cantidad deseada.
+b. Si se utiliza una estrategia de apuesta (x,2*x) con x=10. Es decir, si gano apuesto "x", pero si pierdo apuesto el doble de lo que perdí 2*x, determine la probabilidad de obtener la cantidad deseada.
+'''
+
+import random
+
+#Probabilidad de ganar cada apuesta
+P_WIN = 0.48
+
+#Funcion para simular la estrategia de apuesta hasta llegar a 200 o quedarse sin dinero
+def sim_objetivo_200(trials=100_000, x=10):
+    hits = 0
+    for _ in range(trials):
+        #Empieza con 100 de dinero
+        money = 100
+        while 0 < money < 200:
+            #Apuesta lo minimo entre x y el dinero que tiene
+            bet = min(x, money) 
+            if random.random() < P_WIN:
+                money += bet
+            else:
+                money -= bet
+        if money >= 200:
+            hits += 1
+    return hits / trials
+
+#Imprime la probabilidad simulada de alcanzar los 200 dolares con la estrategia (x,x)
+print(sim_objetivo_200())
+
+
+
+EJERCICIO 9 
+---------------------------------------------------------------------------
+"""
+() Ejercicio 9.***
+
+La Agencia Espacial Internacional desea mejorar su servicio de comunicación por satélite de Tokio a Florida. En el sistema actual, los mensajes pueden enviarse de Tokio hacia Florida utilizando la red de satélites que se muestra a continuación.
+
+
+       .----> S1 ---.
+      /              \
+     /0.90            \0.80
+    /                  \
+   /                    '--->
+Tokio                         Florida
+   \                    .--->
+    \                  /
+     \0.90            /0.70
+      \              /
+       '----> S2 ---'
+
+La ruta superior implica enviar un mensaje de Tokio a Florida por medio del satélite S1. La segunda alternativa es enviar un mensaje de Tokio a Florida por medio del satélite S2. Debido a las órbitas actuales estos satélites pueden conectarse entre sí y entre las ciudades solo una fracción del tiempo. Estas fracciones se escriben junto a cada nodo de la red. Por ejemplo el valor de 0.90 que une a Tokio con S1 significa que esta conexión tiene un 90% de probabilidad de que un mensaje enviado de Tokio llegue a S1.
+
+
+a. Determine utilizando probabilidades, cuál es la probabilidad total que un mensaje enviado desde Tokio llegue a Florida, dada la red actual de satélites. Es decir, la probabilidad para el evento T -> F, dada por P(T -> F).
+
+Por regla de bayes tenemos lo siguiente:
+Ruta de Tokio a Florida por S1: 0.90 * 0.80 = 0.72 (q: 1 - 0.72 = 0.28)
+Ruta de Tokio a Florida por S2: 0.90 * 0.70 = 0.63 (q: 1 - 0.63 = 0.37)
+Probabilidad de fallo total = 0.28 * 0.37 = 0.1036
+Probabilidad de acierto total = 1 - 0.1036 = 0.8964
+
+Lo que nos dice que la ruta mas segura es la que va por S1 que hace que el mensaje llegue a florida con un 72% de probabilidad, se podria decir que la probalilidad
+es baja para tener confianza en un funcionamiento correcto, tambien se puede inferir que los envios a cada satelite son independientes ya que no se cumple la propiedad de suma 
+de una distribucion de probabilidad por lo que la probabilidad total es de casi un 90% de que el mensaje de Tokio llegue a Florida.
+
+
+b. Se desea mejorar al nivel actual de comunicaciones, para ello se están evaluando algunas posibilidades. El personal ha descubierto dos opciones para tratar de mejorar el actual sistema de satélites. La primera consiste en alterar la órbita de S2, lo que aumentaría las probabilidades de comunicarse con Florida a un nuevo valor de  0.80.
+
+Se mejora el satelite S2 para aumentar su probabilidad
+
+       .----> S1 ---.
+      /              \
+     /0.90            \0.80
+    /                  \
+   /                    '--->
+Tokio                         Florida
+   \                    .--->
+    \                  /
+     \0.90            /0.80
+      \              /
+       '----> S2 ---'
+
+Por regla de bayes tenemos lo siguiente:
+Ruta de Tokio a Florida por S1: 0.90 * 0.80 = 0.72 (q: 1 - 0.72 = 0.28)
+Ruta de Tokio a Florida por S1: 0.90 * 0.80 = 0.72 (q: 1 - 0.72 = 0.28)
+Probabilidad de fallo total = 0.28 * 0.28 = 0.0784
+Probabilidad de acierto total = 1 - 0.0784 = 0.9216
+
+Al aumentar la probabilidad de S2 hace que la probabilidad aumente a aproximadamente 92% de que llegue el mensaje
+
+c. Con un esfuerzo sustancialmente mayor, se puede modificar la órbita de S1 para que S1 y S2 puedan comunicarse hacia adelante y hacia atrás con una probabilidad de 0.80. Bajo estas condiciones, ¿qué tan fácil es calcular las nuevas probabilidades?
+El agregar un camino extra hace que aumente drasticamente el calcular una probabilidad con la regla de bayes ya que aparece dependencia 
+entre eventos en vez de seguir un camino simple como en los ejercicios anteriores.
+
+       .----> S1 ---.
+      /       |      \
+     /0.90    |       \0.80
+    /         |        \
+   /          |         '--->
+Tokio         |0.80           Florida
+   \          |         .--->
+    \         |        /
+     \0.90    |       /0.70
+      \       |      /
+       '----> S2 ---'
+
+"""
