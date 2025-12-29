@@ -8,6 +8,7 @@
 
 #Para esta prueba se usa la semilla 01010 que corresponde a 10 decimal y se toma el primer y tercer bit menos significativos usando desplazamientos, luego se realizar un xor entre ambos bits para al final mezclar por medio de un or
 #el numero binario actual con el bit mas significativo reemplazado por el bit sacado de la operacion del cor
+
 def congruencialBinario5bits(semilla=0b01010):
     if semilla == 0:
         return "La semilla del congruencial binario no puede ser 0"
